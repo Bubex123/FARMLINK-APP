@@ -38,4 +38,4 @@ Farm profiles start in `pending` review status; product creation and public list
 - Request bodies reject unknown fields, missing required fields, oversized strings, and invalid image lists.
 - Responses include basic browser security headers.
 
-The rate limiter is process-local, so production with multiple API instances needs a shared store such as Redis. These safeguards are a foundation, not a security certification. The browser currently keeps access tokens in local storage, and the JSON store still needs to be replaced with a transactional database before production use.
+The rate limiter is process-local, so production with multiple API instances needs a shared store such as Redis. These safeguards are a foundation, not a security certification. The browser currently keeps access tokens in local storage; review session storage and operational backup policies before a high-traffic production launch.
