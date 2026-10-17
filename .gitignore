@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Local secrets (keep .env.example files)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local database data and build output
+backend/data/
+/backend/.git-backup/
+**/dist/
+**/.next/
+**/coverage/
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Davis Bubelwa — Developer & ML Expert</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #14B8A6;
+    --teal-dim: #0D7377;
+    --teal-glow: rgba(20,184,166,0.15);
+    --bg: #080C10;
+    --bg2: #0D1117;
+    --bg3: #111820;
+    --border: rgba(20,184,166,0.2);
+    --text: #E2E8F0;
+    --muted: #64748B;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(20,184,166,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20,184,166,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--teal);
+    display: inline-block;
+  }
+
+  h1.hero-name {
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .hero-name .first { color: var(--text); }
+  .hero-name .last {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--teal);
+  }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+  }
+
+  .hero-title span { color: var(--teal); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.85rem 2rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: #080C10;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #2DD4BF; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+  }
+  .btn-outline:hover { background: var(--teal-glow); transform: translateY(-2px); }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 1.5rem;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  h2.section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 3rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+  .about-text p strong { color: var(--teal); font-weight: 600; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .stat-box:hover { border-color: var(--teal); }
+
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 2.2rem;
+    color: var(--teal);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--mono);
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1rem;
+  }
+
+  .skill-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .skill-pill:hover {
+    border-color: var(--teal);
+    background: var(--teal-glow);
+    color: var(--teal);
+    transform: translateY(-3px);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover { border-color: var(--teal); transform: translateY(-4px); }
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    padding: 0.25rem 0.65rem;
+    background: var(--teal-glow);
+    border: 1px solid rgba(20,184,166,0.3);
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+
+  /* EDUCATION */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 3px var(--border);
+  }
+
+  .timeline-year {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--teal);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.1em;
+  }
+
+  .timeline-degree {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-school {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-info p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.75rem 1rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .contact-link:hover { color: var(--teal); border-color: var(--teal); }
+
+  .contact-link .icon {
+    font-size: 1rem;
+    color: var(--teal);
+    width: 20px;
+    text-align: center;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer span { color: var(--teal); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeUp 0.7s ease forwards; }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.25s; opacity: 0; }
+  .delay-3 { animation-delay: 0.4s; opacity: 0; }
+  .delay-4 { animation-delay: 0.55s; opacity: 0; }
+
+  /* CURSOR DOT */
+  .cursor-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    #hero { padding: 7rem 1.5rem 3rem; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    footer { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor"></div>
+
+<nav>
+  <div class="nav-logo">DB://</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-tag fade-in">Available for opportunities</div>
+  <h1 class="hero-name fade-in delay-1">
+    <span class="first">Davis<br></span>
+    <span class="last">Bubelwa</span>
+  </h1>
+  <p class="hero-title fade-in delay-2">
+    Full-Stack Developer &amp; <span>Machine Learning Expert</span><br>
+    Building intelligent web apps &amp; AI-powered automation — Dar es Salaam, TZ
+  </p>
+  <div class="hero-cta fade-in delay-3">
+    <a href="#projects" class="btn btn-primary">View Projects →</a>
+    <a href="#contact" class="btn btn-outline">Get In Touch</a>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — About</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm <strong>Davis Bubelwa</strong>, a passionate developer based in Dar es Salaam, Tanzania. I specialize in building full-stack web applications and deploying machine learning solutions that automate and enhance real-world processes.</p>
+      <p>From crafting clean, responsive frontends with <strong>React & JavaScript</strong> to engineering <strong>AI models in Python</strong> and scaling systems on <strong>AWS</strong>, I bring ideas to life end-to-end.</p>
+      <p>I've worked with companies and as a freelancer, delivering everything from agricultural platforms to predictive ML models — always driven by impact.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-box">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">11+</div>
+        <div class="stat-label">Technologies</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">1yr</div>
+        <div class="stat-label">Freelance Exp.</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">ML Specialist</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 — Skills</div>
+  <h2 class="section-title">Technical Stack</h2>
+  <div class="skills-grid">
+    <div class="skill-pill">Python</div>
+    <div class="skill-pill">JavaScript</div>
+    <div class="skill-pill">React</div>
+    <div class="skill-pill">HTML5</div>
+    <div class="skill-pill">CSS3</div>
+    <div class="skill-pill">Java</div>
+    <div class="skill-pill">C</div>
+    <div class="skill-pill">C#</div>
+    <div class="skill-pill">AWS</div>
+    <div class="skill-pill">Machine Learning</div>
+    <div class="skill-pill">AI Automation</div>
+    <div class="skill-pill">REST APIs</div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 — Projects</div>
+  <h2 class="section-title">What I've Built</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-icon">🌾</div>
+      <div class="project-name">FarmLink</div>
+      <p class="project-desc">An agricultural platform connecting farmers directly with markets, streamlining food distribution and reducing supply chain inefficiencies in East Africa.</p>
+      <div class="project-tags">
+        <span class="tag">React</span>
+        <span class="tag">Python</span>
+        <span class="tag">Web</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🌸</div>
+      <div class="project-name">BubexScent</div>
+      <p class="project-desc">A lifestyle and fragrance discovery web application with rich product browsing, user experience design, and personalized recommendations.</p>
+      <div class="project-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">JavaScript</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🎬</div>
+      <div class="project-name">Bubex Movie Search</div>
+      <p class="project-desc">A fast, intuitive movie discovery app powered by external APIs. Users can search, browse, and explore films with a clean and responsive interface.</p>
+      <div class="project-tags">
+        <span class="tag">React</span>
+        <span class="tag">API Integration</span>
+        <span class="tag">JavaScript</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🔬</div>
+      <div class="project-name">Rabies Pandemic Prediction</div>
+      <p class="project-desc">A machine learning model that predicts rabies outbreak patterns using epidemiological data — applying AI to public health and disease prevention.</p>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">ML</span>
+        <span class="tag">Data Science</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">04 — Education</div>
+  <h2 class="section-title">Academic Background</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2024 – 2027 (In Progress)</div>
+      <div class="timeline-degree">Bachelor of Engineering</div>
+      <div class="timeline-school">St. Joseph University College of Engineering</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2022 – 2024</div>
+      <div class="timeline-degree">Advanced Level Certificate</div>
+      <div class="timeline-school">Pandahill High School</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2011 – 2017</div>
+      <div class="timeline-degree">Primary Education Certificate</div>
+      <div class="timeline-school">Hope and Joy Primary School</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">05 — Contact</div>
+  <h2 class="section-title">Let's Connect</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p>I'm open to full-time roles, freelance projects, and collaboration on interesting AI or web development challenges. Based in Dar es Salaam, available globally.</p>
+      <a href="mailto:davisbubelwa15@gmail.com" class="btn btn-primary">Send me an email →</a>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:davisbubelwa15@gmail.com" class="contact-link">
+        <span class="icon">✉</span> davisbubelwa15@gmail.com
+      </a>
+      <a href="tel:+255783952257" class="contact-link">
+        <span class="icon">📞</span> +255 783 952 257
+      </a>
+      <a href="tel:+255610452257" class="contact-link">
+        <span class="icon">📞</span> +255 610 452 257
+      </a>
+      <a href="https://github.com/Bubex123" class="contact-link" target="_blank">
+        <span class="icon">🐙</span> github.com/Bubex123
+      </a>
+      <a href="https://linkedin.com/in/davis-bubelwa" class="contact-link" target="_blank">
+        <span class="icon">💼</span> LinkedIn — Davis Bubelwa
+      </a>
+      <div class="contact-link">
+        <span class="icon">📍</span> Mbezi, Dar es Salaam, Tanzania
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built by <span>Davis Bubelwa</span> · Full-Stack Developer & ML Engineer · Dar es Salaam 🇹🇿
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Intersection observer for fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'fadeUp 0.6s ease forwards';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.project-card, .stat-box, .skill-pill, .timeline-item').forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

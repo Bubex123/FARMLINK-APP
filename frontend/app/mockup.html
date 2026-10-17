@@ -1,0 +1,465 @@
+
+
+Skip to content
+Using Gmail with screen readers
+in:sent 
+4 of 12
+Mockups
+
+Davis Bubelwa <davisbubelwa15@gmail.com>
+Attachments
+Tue, Aug 11, 1:47 PM
+to sichalwechilengwe7
+
+
+
+
+Sent from my iPhone
+ One attachment
+  •  Scanned by Gmail
+landing-mockup.html
+100%
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karibu — Every event, strung together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Sora:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #1C1330;
+    --night-2: #251A3F;
+    --gold: #D3A24C;
+    --gold-soft: #E7C787;
+    --wine: #8C2F39;
+    --emerald: #1F6E5C;
+    --ivory: #F6EFE2;
+    --sand: #EDE1C8;
+    --ink: #120C21;
+    --line: rgba(246,239,226,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--night);
+    color: var(--ivory);
+    font-family: 'Sora', sans-serif;
+    font-weight: 400;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .display{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em; }
+  a{ color:inherit; text-decoration:none; }
+  img{max-width:100%;display:block;}
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 28px; }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(28,19,48,0.86);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+  .logo{ display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-size:22px; font-weight:600; }
+  .logo .dot{ width:9px; height:9px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(211,162,76,0.18); }
+  .nav-links{ display:flex; gap:36px; font-size:14.5px; color:rgba(246,239,226,0.72); }
+  .nav-links a:hover{ color:var(--gold-soft); }
+  .nav-cta{
+    padding:11px 22px; border-radius:100px; background:var(--gold);
+    color:var(--ink); font-weight:600; font-size:14px;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .nav-cta:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(211,162,76,0.3); }
+  .navwrap-mobile{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; padding:96px 0 60px; overflow:hidden;
+    background:
+      radial-gradient(ellipse 700px 420px at 82% -10%, rgba(211,162,76,0.16), transparent 60%),
+      radial-gradient(ellipse 600px 500px at -5% 30%, rgba(140,47,57,0.20), transparent 60%);
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--gold-soft); border:1px solid rgba(211,162,76,0.35); padding:7px 14px; border-radius:100px;
+    background:rgba(211,162,76,0.06);
+  }
+  .eyebrow::before{ content:''; width:6px;height:6px;border-radius:50%; background:var(--gold); }
+  .hero h1{
+    font-size:clamp(38px, 6vw, 68px); line-height:1.04; margin:26px 0 22px; max-width:820px;
+  }
+  .hero h1 em{ font-style:italic; color:var(--gold-soft); font-weight:500; }
+  .hero p.sub{ font-size:18px; color:rgba(246,239,226,0.72); max-width:520px; margin-bottom:38px; }
+  .hero-ctas{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .btn-primary{
+    padding:15px 28px; border-radius:100px; background:var(--gold); color:var(--ink);
+    font-weight:600; font-size:15px; display:inline-flex; align-items:center; gap:8px;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(211,162,76,0.32); }
+  .btn-ghost{
+    padding:15px 26px; border-radius:100px; border:1px solid var(--line); color:var(--ivory);
+    font-weight:500; font-size:15px; transition: border-color .18s ease, background .18s ease;
+  }
+  .btn-ghost:hover{ border-color:rgba(246,239,226,0.4); background:rgba(246,239,226,0.05); }
+
+  /* Garland — signature element */
+  .garland{
+    margin-top:72px; position:relative; height:150px;
+  }
+  .garland svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .garland-path{
+    stroke:rgba(211,162,76,0.5); stroke-width:1.5; fill:none;
+    stroke-dasharray:1400; stroke-dashoffset:1400;
+    animation: draw 1.8s ease forwards .3s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .bead{
+    position:absolute; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    opacity:0; animation: pop .5s ease forwards;
+  }
+  @keyframes pop{ from{opacity:0; transform:translateY(-50%) scale(.6);} to{opacity:1; transform:translateY(-50%) scale(1);} }
+  .bead .ring{
+    width:52px; height:52px; border-radius:50%; background:var(--night-2);
+    border:1.5px solid rgba(211,162,76,0.45); display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+  }
+  .bead .label{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(246,239,226,0.55); text-transform:uppercase; letter-spacing:0.06em; }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{ padding:110px 0; position:relative; }
+  .section-head{ max-width:620px; margin-bottom:64px; }
+  .section-head .eyebrow{ margin-bottom:20px; }
+  .section-head h2{ font-size:clamp(30px,4vw,44px); line-height:1.12; }
+  .section-head p{ margin-top:16px; font-size:16.5px; color:rgba(246,239,226,0.65); }
+
+  /* ---------- PROBLEM ---------- */
+  .problem{ background:var(--ink); }
+  .chain-compare{ display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  @media(max-width:820px){ .chain-compare{ grid-template-columns:1fr; } }
+  .chain-card{
+    border:1px solid var(--line); border-radius:20px; padding:36px;
+  }
+  .chain-card.old{ background:rgba(140,47,57,0.07); }
+  .chain-card.new{ background:rgba(31,110,92,0.09); border-color:rgba(31,110,92,0.35); }
+  .chain-card h3{ font-size:20px; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
+  .chain-card.old h3::before{ content:'✕'; color:var(--wine); font-family:'IBM Plex Mono',monospace; }
+  .chain-card.new h3::before{ content:'✓'; color:var(--emerald); font-family:'IBM Plex Mono',monospace; }
+  .chain-list{ list-style:none; display:flex; flex-direction:column; gap:14px; }
+  .chain-list li{
+    font-size:15px; color:rgba(246,239,226,0.75); display:flex; align-items:baseline; gap:10px;
+    padding-bottom:14px; border-bottom:1px dashed rgba(246,239,226,0.12);
+  }
+  .chain-list li:last-child{ border-bottom:none; padding-bottom:0; }
+  .chain-list .mono{ font-size:12px; color:rgba(246,239,226,0.4); min-width:20px; }
+
+  /* ---------- METHODS ---------- */
+  .methods-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media(max-width:900px){ .methods-grid{ grid-template-columns:1fr; } }
+  .method-card{
+    background:var(--night-2); border:1px solid var(--line); border-radius:22px; padding:36px 30px;
+    position:relative; overflow:hidden; transition: border-color .2s ease, transform .2s ease;
+  }
+  .method-card:hover{ border-color:rgba(211,162,76,0.4); transform:translateY(-4px); }
+  .method-card .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-soft);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px; display:block;
+  }
+  .method-card h3{ font-size:23px; margin-bottom:12px; }
+  .method-card p{ font-size:14.5px; color:rgba(246,239,226,0.65); margin-bottom:22px; }
+  .method-card .mini-flow{ display:flex; flex-wrap:wrap; gap:8px; }
+  .method-card .mini-flow span{
+    font-size:12px; padding:6px 12px; border-radius:100px; border:1px solid var(--line); color:rgba(246,239,226,0.6);
+  }
+  .method-card.featured{ border-color:var(--gold); background:linear-gradient(160deg, rgba(211,162,76,0.1), var(--night-2) 60%); }
+  .method-card.featured .tag{ color:var(--gold); }
+
+  /* ---------- PACKAGES ---------- */
+  .packages{ background:var(--ink); }
+  .pkg-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media(max-width:900px){ .pkg-grid{ grid-template-columns:1fr; } }
+  .pkg-card{
+    border-radius:22px; padding:2px; position:relative;
+  }
+  .pkg-card.silver{ background:linear-gradient(150deg, rgba(246,239,226,0.35), rgba(246,239,226,0.05)); }
+  .pkg-card.gold{ background:linear-gradient(150deg, var(--gold), rgba(211,162,76,0.12)); transform:scale(1.035); }
+  .pkg-card.platinum{ background:linear-gradient(150deg, rgba(140,47,57,0.55), rgba(140,47,57,0.08)); }
+  .pkg-inner{ background:var(--night); border-radius:20px; padding:38px 32px; height:100%; }
+  .pkg-tier{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(246,239,226,0.5); }
+  .pkg-card.gold .pkg-tier{ color:var(--gold-soft); }
+  .pkg-name{ font-size:27px; margin:10px 0 20px; }
+  .pkg-includes{ list-style:none; display:flex; flex-direction:column; gap:11px; margin-bottom:28px; }
+  .pkg-includes li{ font-size:14.5px; color:rgba(246,239,226,0.75); display:flex; align-items:center; gap:10px; }
+  .pkg-includes li::before{ content:'●'; font-size:6px; color:var(--gold); }
+  .pkg-price{ font-family:'IBM Plex Mono',monospace; font-size:24px; color:var(--ivory); margin-bottom:6px; }
+  .pkg-price span{ font-size:12px; color:rgba(246,239,226,0.45); }
+  .pkg-cta{ margin-top:20px; display:block; text-align:center; padding:13px; border-radius:100px; border:1px solid var(--line); font-size:14px; font-weight:500; transition:all .2s ease;}
+  .pkg-card.gold .pkg-cta{ background:var(--gold); color:var(--ink); border-color:var(--gold); font-weight:600; }
+  .pkg-cta:hover{ border-color:var(--gold); }
+  .pkg-badge{ position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:11px; padding:5px 14px; border-radius:100px; font-weight:600; letter-spacing:0.05em; }
+
+  /* ---------- TRUST ---------- */
+  .trust{ }
+  .trust-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:20px; overflow:hidden; }
+  @media(max-width:820px){ .trust-grid{ grid-template-columns:repeat(2,1fr); } }
+  .trust-cell{ background:var(--night); padding:34px 26px; }
+  .trust-cell .num{ font-family:'IBM Plex Mono',monospace; color:var(--gold-soft); font-size:13px; display:block; margin-bottom:14px; }
+  .trust-cell h4{ font-family:'Fraunces',serif; font-size:18px; margin-bottom:8px; font-weight:500; }
+  .trust-cell p{ font-size:13.5px; color:rgba(246,239,226,0.6); }
+
+  /* ---------- VENDOR CTA ---------- */
+  .vendor-cta{
+    background: linear-gradient(135deg, var(--wine), #5c1f27);
+    border-radius:28px; padding:64px 56px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap;
+  }
+  .vendor-cta h2{ font-size:clamp(26px,3.4vw,36px); max-width:440px; }
+  .vendor-cta p{ color:rgba(246,239,226,0.8); margin-top:14px; max-width:420px; font-size:15px; }
+  .vendor-cta .btn-primary{ background:var(--ivory); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ border-top:1px solid var(--line); padding:56px 0 40px; }
+  .footer-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:40px; margin-bottom:40px; }
+  .footer-col h5{ font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:rgba(246,239,226,0.45); margin-bottom:16px; }
+  .footer-col a{ display:block; font-size:14px; color:rgba(246,239,226,0.7); margin-bottom:10px; }
+  .footer-col a:hover{ color:var(--gold-soft); }
+  .footer-bottom{ display:flex; justify-content:space-between; padding-top:28px; border-top:1px solid var(--line); font-size:13px; color:rgba(246,239,226,0.4); flex-wrap:wrap; gap:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>Karibu</div>
+    <div class="nav-links">
+      <a href="#solution">How it works</a>
+      <a href="#packages">Packages</a>
+      <a href="#trust">Trust &amp; safety</a>
+      <a href="#vendors">For vendors</a>
+    </div>
+    <a href="#" class="nav-cta">Start planning</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Dar es Salaam · Weddings &amp; Send-offs</span>
+    <h1>Every service your event needs, <em>strung together.</em></h1>
+    <p class="sub">Karibu connects you to verified halls, DJs, caterers, decorators and photographers — compare, book and pay for a whole event without forty phone calls.</p>
+    <div class="hero-ctas">
+      <a href="#packages" class="btn-primary">Build your event →</a>
+      <a href="#vendors" class="btn-ghost">Register as a vendor</a>
+    </div>
+
+    <div class="garland" aria-hidden="true">
+      <svg viewBox="0 0 1100 150" preserveAspectRatio="none">
+        <path class="garland-path" d="M 20 110 Q 130 20, 240 100 T 460 90 T 680 100 T 900 85 T 1080 100"/>
+      </svg>
+      <div class="bead" style="left:0%; animation-delay:.9s;"><div class="ring">🏛️</div><div class="label">Hall</div></div>
+      <div class="bead" style="left:19%; top:24%; animation-delay:1.05s;"><div class="ring">🎧</div><div class="label">DJ</div></div>
+      <div class="bead" style="left:38%; top:60%; animation-delay:1.2s;"><div class="ring">🍽️</div><div class="label">Catering</div></div>
+      <div class="bead" style="left:57%; top:28%; animation-delay:1.35s;"><div class="ring">🌸</div><div class="label">Decor</div></div>
+      <div class="bead" style="left:76%; top:56%; animation-delay:1.5s;"><div class="ring">📷</div><div class="label">Photo</div></div>
+      <div class="bead" style="left:95%; top:26%; animation-delay:1.65s;"><div class="ring">🚗</div><div class="label">Cars</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The problem</span>
+      <h2>Planning today is nine separate negotiations.</h2>
+      <p>Every vendor is a different phone number, a different price, a different promise — with no way to check any of it until the day arrives.</p>
+    </div>
+    <div class="chain-compare">
+      <div class="chain-card old">
+        <h3>Without Karibu</h3>
+        <ul class="chain-list">
+          <li><span class="mono">01</span>Call around for a hall, hope it's free on your date</li>
+          <li><span class="mono">02</span>Ask friends for a DJ — no reviews, no contract</li>
+          <li><span class="mono">03</span>Negotiate catering prices with no comparison</li>
+          <li><span class="mono">04</span>Pay in cash, in full, in advance</li>
+          <li><span class="mono">05</span>Hope everyone shows up on the day</li>
+        </ul>
+      </div>
+      <div class="chain-card new">
+        <h3>With Karibu</h3>
+        <ul class="chain-list">
+          <li><span class="mono">01</span>See every hall's real availability and price</li>
+          <li><span class="mono">02</span>Book verified vendors with ratings you can trust</li>
+          <li><span class="mono">03</span>Compare packages side by side in minutes</li>
+          <li><span class="mono">04</span>Pay into escrow — released on milestones</li>
+          <li><span class="mono">05</span>Backup vendors on standby if one cancels</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solution">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Three ways to book</span>
+      <h2>Plan it your way.</h2>
+      <p>Whether you want full control, a ready combination, or a budget that plans itself.</p>
+    </div>
+    <div class="methods-grid">
+      <div class="method-card">
+        <span class="tag">Method 01</span>
+        <h3>Build your own</h3>
+        <p>Choose each vendor individually — hall, DJ, catering, decor — exactly the way you'd configure a custom order.</p>
+        <div class="mini-flow"><span>Hall</span><span>+ DJ</span><span>+ Catering</span><span>+ ...</span></div>
+      </div>
+      <div class="method-card featured">
+        <span class="tag">Method 02 · Most booked</span>
+        <h3>Ready-made packages</h3>
+        <p>Silver, Gold or Platinum — pre-matched vendor combinations at a fixed, transparent price.</p>
+        <div class="mini-flow"><span>Gold Wedding</span><span>7 services</span><span>1 price</span></div>
+      </div>
+      <div class="method-card">
+        <span class="tag">Method 03</span>
+        <h3>Smart planner</h3>
+        <p>Enter your budget, guest count, city and date — Karibu assembles the best combination that fits.</p>
+        <div class="mini-flow"><span>6,000,000 TZS</span><span>250 guests</span><span>→ auto-matched</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="packages" id="packages">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Ready-made packages</span>
+      <h2>Three tiers, one transparent price.</h2>
+      <p>Every package is pre-vetted — vendors confirmed, dates checked, nothing left to chance.</p>
+    </div>
+    <div class="pkg-grid">
+      <div class="pkg-card silver">
+        <div class="pkg-inner">
+          <span class="pkg-tier">Tier 01</span>
+          <h3 class="pkg-name">Silver Wedding</h3>
+          <ul class="pkg-includes">
+            <li>Hall for up to 150 guests</li>
+            <li>DJ, 6-hour set</li>
+            <li>Decoration, standard theme</li>
+            <li>Photographer, half-day</li>
+            <li>Catering, 3-course menu</li>
+          </ul>
+          <div class="pkg-price">4,500,000 <span>TZS</span></div>
+          <a href="#" class="pkg-cta">Select Silver</a>
+        </div>
+      </div>
+      <div class="pkg-card gold">
+        <span class="pkg-badge">Best value</span>
+        <div class="pkg-inner">
+          <span class="pkg-tier">Tier 02</span>
+          <h3 class="pkg-name">Gold Wedding</h3>
+          <ul class="pkg-includes">
+            <li>Hall for up to 300 guests</li>
+            <li>DJ + MC, full day</li>
+            <li>Premium decoration &amp; drapery</li>
+            <li>Catering + drinks package</li>
+            <li>Cars for bride &amp; groom</li>
+            <li>Full-day photography</li>
+          </ul>
+          <div class="pkg-price">8,000,000 <span>TZS</span></div>
+          <a href="#" class="pkg-cta">Select Gold</a>
+        </div>
+      </div>
+      <div class="pkg-card platinum">
+        <div class="pkg-inner">
+          <span class="pkg-tier">Tier 03</span>
+          <h3 class="pkg-name">Platinum Wedding</h3>
+          <ul class="pkg-includes">
+            <li>Everything in Gold, upgraded</li>
+            <li>Premium hall or outdoor venue</li>
+            <li>Videography + drone coverage</li>
+            <li>Full guest transport fleet</li>
+            <li>Dedicated day-of coordinator</li>
+          </ul>
+          <div class="pkg-price">On request <span>Custom quote</span></div>
+          <a href="#" class="pkg-cta">Select Platinum</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trust" class="trust">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Trust &amp; safety</span>
+      <h2>Every vendor earns their badge.</h2>
+      <p>Nobody goes live without verification — this is what stands between you and a no-show on your wedding day.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-cell"><span class="num">01</span><h4>ID verified</h4><p>National ID and phone confirmed before any listing goes live.</p></div>
+      <div class="trust-cell"><span class="num">02</span><h4>Selfie &amp; location</h4><p>Identity match plus a confirmed business address.</p></div>
+      <div class="trust-cell"><span class="num">03</span><h4>Escrow payments</h4><p>Funds are held by Karibu and released on agreed milestones.</p></div>
+      <div class="trust-cell"><span class="num">04</span><h4>Rated &amp; reviewed</h4><p>Repeated complaints lead to suspension, not just a bad star.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="vendors">
+  <div class="wrap">
+    <div class="vendor-cta">
+      <div>
+        <h2>Own a hall, a DJ set, or a catering business?</h2>
+        <p>List free. No commission until your first booking is confirmed. Get discovered by every couple planning a wedding in Dar es Salaam.</p>
+      </div>
+      <a href="#" class="btn-primary">Register your business →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="logo" style="margin-bottom:12px;"><span class="dot"></span>Karibu</div>
+        <p style="font-size:13.5px; color:rgba(246,239,226,0.55); max-width:220px;">The event operating system for East Africa — starting with weddings in Dar es Salaam.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="#solution">How it works</a>
+        <a href="#packages">Packages</a>
+        <a href="#trust">Trust &amp; safety</a>
+      </div>
+      <div class="footer-col">
+        <h5>Vendors</h5>
+        <a href="#vendors">Register</a>
+        <a href="#">Verification</a>
+        <a href="#">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Karibu. Dar es Salaam, Tanzania.</span>
+      <span>Built for East Africa's event industry.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+Displaying landing-mockup.html.
