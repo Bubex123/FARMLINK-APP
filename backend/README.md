@@ -11,6 +11,8 @@ $env:JWT_SECRET = (node -p "require('crypto').randomBytes(32).toString('hex')")
 npm run start:dev
 ```
 
+For a compiled production build, use `npm run build` followed by `npm run start:prod`.
+
 The API refuses to start if `JWT_SECRET` is missing or shorter than 32 characters. Copy `.env.example` to `.env`, then set `DATABASE_URL` to your pooled PostgreSQL connection string; never commit or share this secret. For the JSON import, set optional `MIGRATION_DATABASE_URL` to Neon's direct (non-pooled) connection string. Use a different randomly generated `JWT_SECRET` in each environment and store it in your host's secret manager. In production, set `FRONTEND_URL` to the exact frontend origin (or a comma-separated list of origins); the API refuses to start in production without it.
 
 The frontend defaults to `http://localhost:3001/api`. Set `NEXT_PUBLIC_API_URL` in the frontend environment if the API runs elsewhere.
