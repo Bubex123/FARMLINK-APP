@@ -46,7 +46,7 @@ export default function LoginPage() {
 
       saveAuth(response);
       const next = new URLSearchParams(window.location.search).get("next");
-      router.replace(response.user.role === "buyer" && next === "/checkout" ? "/checkout" : response.user.role === "seller" ? "/farmer/dashboard" : response.user.role === "admin" ? "/admin/dashboard" : "/");
+      router.replace(response.user.role === "buyer" ? next === "/checkout" ? "/checkout" : "/orders" : response.user.role === "seller" ? "/farmer/dashboard" : response.user.role === "admin" ? "/admin/dashboard" : "/");
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Could not log in. Please try again.");
       setLoading(false);

@@ -232,9 +232,15 @@ button { color: inherit; }
 .customer-order-bottom p { margin: 5px 0 0; color: #75816e; font-size: 10px; }
 .customer-order-bottom .customer-help-cta { min-height: 38px; padding-inline: 14px; border: 1px solid #cbd7c3; border-radius: 8px; background: #fffefa; color: #456d42; font-size: 10px; font-weight: 750; text-decoration: none; }
 .customer-orders-page .account-footer-inner { width: min(1040px, calc(100% - 48px)); align-items: center; }
+.customer-logistics-shortcut { display: none; }
+.customer-cash-payment-button { display: flex; width: 100%; min-height: 39px; align-items: center; justify-content: space-between; margin: 2px 0 0; padding: 0 12px; border: 1px solid #d9e5d3; border-radius: 9px; background: #f1f6ed; color: #42683e; font: inherit; font-size: 10px; font-weight: 750; text-align: left; cursor: pointer; }
+.customer-cash-payment-button span { display: grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #e1ecd9; font-size: 14px; }
+.customer-cash-payment-info { margin: 0; padding: 10px 12px; border: 1px solid #e3ebde; border-top: 0; border-radius: 0 0 9px 9px; background: #f8fbf5; color: #687b60; font-size: 10px; line-height: 1.55; }
 @media (max-width: 760px) {
   .customer-orders-page .main-nav { display: none; }
   .customer-orders-page .nav-shell { min-height: 64px; }
+  .customer-logistics-shortcut { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; margin-left: auto; padding: 0 11px; border: 1px solid #cbd7c3; border-radius: 9px; background: #fffefa; color: #42683e; font-size: 10px; font-weight: 750; text-decoration: none; }
+  .customer-orders-page .customer-back { display: none; }
   .customer-orders-shell { width: calc(100% - 28px); padding: 30px 0 48px; }
   .customer-orders-heading { align-items: flex-start; }
   .customer-orders-heading h1 { font-size: 34px; }
