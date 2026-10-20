@@ -26,6 +26,10 @@ export class RateLimitGuard implements CanActivate {
       key = `register:${ip}`;
       limit = 10;
       windowMs = 60 * 60_000;
+    } else if (path.endsWith('/sms/inbound')) {
+      key = `sms-inbound:${ip}`;
+      limit = 60;
+      windowMs = 60_000;
     }
 
     let bucket = this.buckets.get(key);

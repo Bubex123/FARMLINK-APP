@@ -182,8 +182,9 @@ export class AppService {
     const buyer = data.users.find((item) => item.id === order.buyerId);
     const seller = data.sellers.find((item) => item.id === order.sellerId);
     const product = data.products.find((item) => item.id === order.productId);
+    const { smsActionCode: _smsActionCode, ...publicOrder } = order;
     return {
-      ...order,
+      ...publicOrder,
       buyer: buyer ? this.publicUser(buyer) : undefined,
       seller: seller ? { id: seller.id, farmName: seller.farmName, email: seller.email, phone: seller.phone } : undefined,
       product: product ? { id: product.id, name: product.name, category: product.category, unit: product.unit } : undefined,
@@ -212,7 +213,7 @@ export class AppService {
   }
 
   async createOrder(userId: string, input: Record<string, unknown>) {
-    return this.database.transaction(async () => {
+    const result = await this.database.transaction(async () => {
     const data = await this.store();
     const buyer = data.users.find((user) => user.id === userId);
     if (!buyer || buyer.role !== 'buyer') throw new ForbiddenException('Only buyer accounts can place orders.');
@@ -233,11 +234,66 @@ export class AppService {
       totalPrice: product.price * quantity, deliveryFee: 0, status: 'pending', paymentStatus: 'cash_on_delivery',
       deliveryAddress, deliveryCity, deliveryPhone, specialInstructions: String(input.specialInstructions || ''), createdAt: now.toISOString(), updatedAt: now.toISOString(),
     };
+    const smsCredentialsReady = Boolean(process.env.AT_USERNAME && process.env.AT_API_KEY);
+    if (seller.smsOrderAlerts && smsCredentialsReady && seller.phone) order.smsActionCode = randomBytes(6).toString('hex').toUpperCase();
     product.quantity -= quantity;
     data.orders ||= [];
     data.orders.push(order);
     await this.save(data);
-    return this.orderView(order, data);
+    return { order: this.orderView(order, data), sellerPhone: seller.phone, sellerSmsOptIn: Boolean(seller.smsOrderAlerts), productName: product.name, actionCode: order.smsActionCode };
+    });
+    if (result.sellerSmsOptIn && result.actionCode) {
+      const message = `FarmLink order ${result.order.orderNumber}: ${result.order.quantity} x ${result.productName}. Reply YES ${result.order.orderNumber} ${result.actionCode} to confirm or NO ${result.order.orderNumber} ${result.actionCode} to reject. Call the buyer at ${result.order.deliveryPhone} if needed.`;
+      try {
+        await this.sendSms(result.sellerPhone, message);
+      } catch (error) {
+        console.error('FarmLink order SMS could not be sent:', error instanceof Error ? error.message : 'SMS provider error');
+      }
+    }
+    return result.order;
+  }
+
+  private async sendSms(to: string, message: string) {
+    const username = process.env.AT_USERNAME;
+    const apiKey = process.env.AT_API_KEY;
+    if (!username || !apiKey) return;
+    const form = new URLSearchParams({ username, to, message });
+    if (process.env.AT_SENDER_ID) form.set('from', process.env.AT_SENDER_ID);
+    const apiHost = process.env.AT_ENVIRONMENT === 'sandbox' ? 'https://api.sandbox.africastalking.com' : 'https://api.africastalking.com';
+    const response = await fetch(`${apiHost}/version1/messaging`, {
+      method: 'POST',
+      headers: { apiKey, Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form,
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!response.ok) throw new Error(`SMS provider returned HTTP ${response.status}.`);
+    const payload = await response.json() as { SMSMessageData?: { Recipients?: Array<{ status?: string; statusCode?: number }> } };
+    const recipient = payload.SMSMessageData?.Recipients?.[0];
+    if (recipient && Number(recipient.statusCode) !== 101) throw new Error(recipient.status || `SMS provider status ${recipient.statusCode}.`);
+  }
+
+  async handleFarmerSmsReply(from: string, text: string) {
+    if (from.length > 40 || text.length > 300) throw new BadRequestException('Invalid SMS callback.');
+    const match = text.trim().match(/^(YES|NO)\s+(FL-[A-Z0-9-]+)\s+([A-F0-9]{12})$/i);
+    if (!match) throw new BadRequestException('Reply YES <order number> <code> to confirm, or NO <order number> <code> to reject.');
+    const [, command, orderNumber, code] = match;
+    const phoneDigits = (value: string) => {
+      const digits = value.replace(/\D/g, '');
+      return digits.startsWith('0') ? `255${digits.slice(1)}` : digits;
+    };
+    return this.database.transaction(async () => {
+      const data = await this.store();
+      const order = (data.orders || []).find((item) => item.orderNumber.toLowerCase() === orderNumber.toLowerCase());
+      const seller = order && data.sellers.find((item) => item.id === order.sellerId);
+      if (!order || !seller?.smsOrderAlerts || !order.smsActionCode || order.smsActionCode !== code.toUpperCase() || phoneDigits(seller.phone) !== phoneDigits(from)) {
+        throw new UnauthorizedException('This SMS could not be matched to an active order and farmer phone.');
+      }
+      if (order.status !== 'pending') throw new BadRequestException(`Order ${order.orderNumber} is already ${order.status}.`);
+      order.status = command.toUpperCase() === 'YES' ? 'confirmed' : 'rejected';
+      delete order.smsActionCode;
+      order.updatedAt = new Date().toISOString();
+      await this.save(data);
+      return { status: 'ok', message: `Order ${order.orderNumber} ${order.status}.` };
     });
   }
 
@@ -252,6 +308,7 @@ export class AppService {
     const transitions: Record<string, string[]> = { pending: ['confirmed', 'rejected'], confirmed: ['shipped'], shipped: ['delivered'] };
     if (!transitions[order.status]?.includes(status)) throw new BadRequestException(`Order cannot move from ${order.status} to ${status}.`);
     order.status = status;
+    delete order.smsActionCode;
     order.updatedAt = new Date().toISOString();
     await this.save(data);
     return this.orderView(order, data);
@@ -297,7 +354,7 @@ export class AppService {
     if (existing) throw new ConflictException('A farm profile already exists for this account.');
     const required = ['farmName', 'address', 'city', 'region'];
     if (required.some((key) => !String(input[key] || '').trim())) throw new BadRequestException('Farm name, address, city, and region are required.');
-    const seller: Seller = { id: randomUUID(), userId, farmName: String(input.farmName).trim(), description: String(input.description || ''), contactPerson: String(input.contactPerson || `${user.firstName} ${user.lastName}`), phone: String(input.phone || user.phone), email: String(input.email || user.email), address: String(input.address), city: String(input.city), region: String(input.region), verificationStatus: 'pending', rating: 0, totalOrders: 0, totalReviews: 0 };
+    const seller: Seller = { id: randomUUID(), userId, farmName: String(input.farmName).trim(), description: String(input.description || ''), contactPerson: String(input.contactPerson || `${user.firstName} ${user.lastName}`), phone: String(input.phone || user.phone), email: String(input.email || user.email), address: String(input.address), city: String(input.city), region: String(input.region), verificationStatus: 'pending', rating: 0, totalOrders: 0, totalReviews: 0, smsOrderAlerts: input.smsOrderAlerts === true };
     data.sellers.push(seller);
     await this.save(data);
     return seller;
@@ -307,6 +364,17 @@ export class AppService {
   async mySeller(userId: string) {
     const data = await this.store();
     return data.sellers.find((item) => item.userId === userId) || null;
+  }
+
+  async updateMySellerSmsPreference(userId: string, enabled: boolean) {
+    return this.database.transaction(async () => {
+      const data = await this.store();
+      const seller = data.sellers.find((item) => item.userId === userId);
+      if (!seller) throw new BadRequestException('Submit your farm profile before changing SMS preferences.');
+      seller.smsOrderAlerts = enabled;
+      await this.save(data);
+      return { smsOrderAlerts: seller.smsOrderAlerts };
+    });
   }
 
   async updateSellerVerification(id: string, status: string) {

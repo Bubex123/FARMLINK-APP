@@ -168,7 +168,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="home-page">
       <header className="site-header">
         <div className="nav-shell">
           <Link href="#home" className="brand" aria-label="FarmLink home"><Mark>F</Mark><span>FarmLink</span></Link>
@@ -182,6 +182,8 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      <a className="mobile-market-cta" href="#marketplace">Browse marketplace <span aria-hidden="true">↓</span></a>
 
       <section className="hero" id="home">
         <div className="hero-photo" />
@@ -234,6 +236,37 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="logistics-promo-section" id="logistics">
+        <div className="page-width logistics-promo-inner">
+          <div className="logistics-promo-copy">
+            <span className="eyebrow">DELIVERY PARTNERS</span>
+            <h2>Deliver farm produce with FarmLink</h2>
+            <p>Our partner drivers move crops, livestock and dairy from farm gates to buyers’ doors. Register your vehicle and tell us where you can deliver.</p>
+            <ul>
+              <li><span>✓</span> Choose your routes, rates and vehicle type</li>
+              <li><span>✓</span> Trucks, pickups, bodas and refrigerated vans welcome</li>
+              <li><span>✓</span> Every partner is reviewed before deliveries are assigned</li>
+            </ul>
+          </div>
+          <div className="logistics-promo-card">
+            <span className="logistics-icon" aria-hidden="true">↗</span>
+            <p>Apply to join the FarmLink delivery network or contact us about an active delivery.</p>
+            <Link className="button button-green" href="/logistics#register">Register as logistics partner</Link>
+            <Link className="button logistics-secondary-button" href="/logistics#report">Report a delivery issue</Link>
+            <small>Free to apply. Verified partners only.</small>
+          </div>
+        </div>
+      </section>
+
+      <section className="phone-order-section" id="phone-order">
+        <div className="page-width phone-order-inner">
+          <span className="eyebrow">FARMLINK CAN HELP</span>
+          <h2>No smartphone? You can still order from FarmLink.</h2>
+          <p>Send us your product list, quantities and delivery location. Our team can help connect you with an approved farmer.</p>
+          <Link className="button button-light" href="/order-by-phone">See ways to order <span aria-hidden="true">→</span></Link>
+        </div>
+      </section>
+
       <section className="categories-section section-pad">
         <div className="page-width">
           <div className="center-heading"><span className="eyebrow">SHOP WHAT&apos;S IN SEASON</span><h2>Shop by category</h2><p>Fresh crops, livestock, eggs and dairy — sourced straight from approved Tanzanian farms.</p></div>
@@ -268,7 +301,7 @@ export default function Home() {
 
       <section className="join-section"><div className="page-width join-inner"><span className="eyebrow">GROW WITH FARM LINK</span><h2>Ready to connect<br />farm to table?</h2><p>Join trusted farmers and buyers using FarmLink across Tanzania.</p><div><Link className="button button-light" href="/register">Join FarmLink <span>↗</span></Link><a className="button button-outline-light" href="#marketplace">Explore the market</a></div></div></section>
 
-      <footer className="site-footer" id="contact"><div className="page-width"><div className="footer-main"><div><Link href="#home" className="brand footer-brand"><Mark>F</Mark><span>FarmLink</span></Link><p>Fresh crops and healthy livestock, directly from approved Tanzanian farmers.</p><span className="footer-location">⌖ &nbsp; Dar es Salaam, Tanzania</span></div><div className="footer-links"><strong>Explore FarmLink</strong><a href="#home">Home</a><a href="#marketplace">Marketplace</a><Link href="/register?type=farmer">Sell as a farmer</Link><Link href="/register?type=customer">Register as a customer</Link><Link href="/login">Log in</Link></div><div className="footer-links"><strong>Need a hand?</strong><a href="#how-it-works">How it works</a><a href="mailto:hello@farmlink.co.tz">Contact our team</a><span>Cash on delivery</span><span>Admin-approved farms</span></div><div className="footer-signup"><span className="eyebrow">THE GOOD STUFF, OCCASIONALLY</span><p>Fresh market news from farms around Tanzania.</p><form onSubmit={(event) => { event.preventDefault(); setNotice("Thanks for joining the FarmLink updates!"); window.setTimeout(() => setNotice(""), 3000); }}><input aria-label="Your email" placeholder="Your email address" type="email" required /><button aria-label="Subscribe">→</button></form></div></div><div className="footer-bottom"><div className="region-list"><span>⌖</span>{["Dar es Salaam", "Morogoro", "Dodoma", "Arusha", "Mwanza", "Iringa", "Tanga"].map((region) => <span className="region-pill" key={region}>{region}</span>)}</div><p>© 2026 FarmLink <span>Made for Tanzania, with care <b>♥</b></span></p></div></div></footer>
+      <footer className="site-footer" id="contact"><div className="page-width"><div className="footer-main"><div><Link href="#home" className="brand footer-brand"><Mark>F</Mark><span>FarmLink</span></Link><p>Fresh crops and healthy livestock, directly from approved Tanzanian farmers.</p><span className="footer-location">⌖ &nbsp; Dar es Salaam, Tanzania</span></div><div className="footer-links"><strong>Explore FarmLink</strong><a href="#home">Home</a><a href="#marketplace">Marketplace</a><Link href="/order-by-phone">Order without a smartphone</Link><Link href="/register?type=farmer">Sell as a farmer</Link><Link href="/logistics">Deliver with FarmLink</Link><Link href="/register?type=customer">Register as a customer</Link><Link href="/login">Log in</Link></div><div className="footer-links"><strong>Need a hand?</strong><a href="#how-it-works">How it works</a><Link href="/logistics#report">Report a delivery issue</Link><a href="mailto:hello@farmlink.co.tz">Contact our team</a><span>Cash on delivery</span><span>Admin-approved farms</span></div><div className="footer-signup"><span className="eyebrow">THE GOOD STUFF, OCCASIONALLY</span><p>Fresh market news from farms around Tanzania.</p><form onSubmit={(event) => { event.preventDefault(); setNotice("Thanks for joining the FarmLink updates!"); window.setTimeout(() => setNotice(""), 3000); }}><input aria-label="Your email" placeholder="Your email address" type="email" required /><button aria-label="Subscribe">→</button></form></div></div><div className="footer-bottom"><div className="region-list"><span>⌖</span>{["Dar es Salaam", "Morogoro", "Dodoma", "Arusha", "Mwanza", "Iringa", "Tanga"].map((region) => <span className="region-pill" key={region}>{region}</span>)}</div><p>© 2026 FarmLink <span>Made for Tanzania, with care <b>♥</b></span></p></div></div></footer>
 
       {notice && <div className="toast" role="status"><span>✓</span>{notice}</div>}
     </main>

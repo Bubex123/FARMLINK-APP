@@ -19,6 +19,7 @@ type SellerProfile = {
   rating?: number | string;
   totalOrders?: number;
   totalReviews?: number;
+  smsOrderAlerts?: boolean;
 };
 
 type FarmerProduct = {
@@ -141,7 +142,7 @@ export default function FarmerDashboard() {
     try {
       await apiRequest("/sellers", {
         method: "POST",
-        body: JSON.stringify(Object.fromEntries(form.entries())),
+        body: JSON.stringify({ ...Object.fromEntries(form.entries()), smsOrderAlerts: form.get("smsOrderAlerts") === "on" }),
       }, token);
       setNotice("Farm application submitted. The FarmLink team will review it before your products go live.");
       await loadDashboard(token);
@@ -206,6 +207,21 @@ export default function FarmerDashboard() {
     }
   }
 
+  async function updateSmsAlerts(enabled: boolean) {
+    const token = localStorage.getItem("accessToken");
+    if (!token || !seller) return;
+    setError(""); setNotice("");
+    try {
+      const result = await apiRequest<{ smsOrderAlerts: boolean }>("/sellers/me/sms-alerts", {
+        method: "PUT", body: JSON.stringify({ enabled }),
+      }, token);
+      setSeller({ ...seller, smsOrderAlerts: result.smsOrderAlerts });
+      setNotice(enabled ? "SMS order alerts enabled." : "SMS order alerts turned off.");
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Could not update SMS preferences.");
+    }
+  }
+
   function logout() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -245,6 +261,7 @@ export default function FarmerDashboard() {
             <label>City or district<input name="city" required minLength={2} maxLength={100} /></label>
             <label>Region<input name="region" required minLength={2} maxLength={100} /></label>
             <label className="wide-field">About your farm<textarea name="description" rows={3} maxLength={1000} /></label>
+            <label className="wide-field farmer-sms-opt-in"><input type="checkbox" name="smsOrderAlerts" /> Send me order alerts by SMS. Reply YES or NO to confirm or reject an order.</label>
             <button className="farmer-primary-button wide-field" disabled={working}>{working ? "Submitting…" : "Submit farm profile for review"}</button>
           </form>
         </section> : <>
@@ -287,7 +304,7 @@ export default function FarmerDashboard() {
             </div> : <div className="farmer-empty approval-empty"><strong>Product uploads unlock after farm approval</strong><span>Your farm status is <b>{seller.verificationStatus}</b>. You can still review orders above.</span></div>}
           </section>
 
-          <section className="farmer-panel farmer-profile-card" id="farm-profile"><div><span className="eyebrow">FARM PROFILE</span><h2>{seller.farmName}</h2><p>{seller.address}, {seller.city}, {seller.region}</p><p>{seller.contactPerson} · {seller.phone}{seller.email ? ` · ${seller.email}` : ""}</p>{seller.description && <p>{seller.description}</p>}</div><span className={`farm-status status-${statusClass}`}><i /> {statusLabel}</span></section>
+          <section className="farmer-panel farmer-profile-card" id="farm-profile"><div><span className="eyebrow">FARM PROFILE</span><h2>{seller.farmName}</h2><p>{seller.address}, {seller.city}, {seller.region}</p><p>{seller.contactPerson} · {seller.phone}{seller.email ? ` · ${seller.email}` : ""}</p>{seller.description && <p>{seller.description}</p>}<label className="farmer-sms-opt-in"><input type="checkbox" checked={Boolean(seller.smsOrderAlerts)} onChange={(event) => void updateSmsAlerts(event.target.checked)} /> Receive new order alerts and confirm or reject them by SMS</label></div><span className={`farm-status status-${statusClass}`}><i /> {statusLabel}</span></section>
         </>}
         <footer className="farmer-footer"><Link href="/">← Back to FarmLink marketplace</Link><span>Need help? <a href="mailto:hello@farmlink.co.tz">Contact our team</a></span></footer>
       </div>

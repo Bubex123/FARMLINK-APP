@@ -17,6 +17,12 @@ The API refuses to start if `JWT_SECRET` is missing or shorter than 32 character
 
 The frontend defaults to `http://localhost:3001/api`. Set `NEXT_PUBLIC_API_URL` in the frontend environment if the API runs elsewhere.
 
+## SMS access for farmers using basic phones
+
+Farmers can opt in from registration or their farmer dashboard. When an order is placed, the API sends an SMS through Africa's Talking with the order details and a one-time reply code. The farmer can reply `YES <order number> <code>` to confirm or `NO <order number> <code>` to reject. The API checks both the farmer's registered phone number and the one-time code; the code is removed after use. Orders still work normally when SMS credentials are absent or a text cannot be delivered.
+
+To enable live SMS, create/configure an Africa's Talking account and add `AT_USERNAME` and `AT_API_KEY` as private environment variables on the Render backend. Add `AT_SENDER_ID` only if your provider account has an approved sender ID; otherwise leave it unset. For the provider sandbox, also set `AT_ENVIRONMENT=sandbox`; leave it unset for live traffic. Two-way replies require a provider service/number that supports incoming SMS and its callback configured to send `from` and `text` to `https://<your-render-host>/api/sms/inbound`. Confirm the callback payload and incoming SMS capability with the provider before relying on replies. Existing farmers can enable the preference in their farmer dashboard. No database migration is needed; the preference and one-time order code are stored in the existing JSON data columns.
+
 ## Implemented routes
 
 - `GET /api/health`

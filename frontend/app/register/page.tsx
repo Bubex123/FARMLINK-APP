@@ -67,6 +67,7 @@ export default function RegisterPage() {
               city: form.get("city"),
               region: form.get("region"),
               description: form.get("about"),
+              smsOrderAlerts: form.get("smsOrderAlerts") === "on",
             }),
           }, response.accessToken);
         } catch (profileError) {
@@ -81,7 +82,8 @@ export default function RegisterPage() {
           router.replace("/checkout");
           return;
         }
-        setNotice("Your customer account is ready. You can now log in and place orders.");
+        router.replace("/orders");
+        return;
       }
       formElement.reset(); setPassword(""); setConfirmPassword("");
     } catch (requestError) {
@@ -106,7 +108,7 @@ export default function RegisterPage() {
           <PasswordField name="password" label="Create a password" autoComplete="new-password" minLength={8} showStrength onValueChange={setPassword} />
           <label>Confirm password<input required type="password" name="confirmPassword" autoComplete="new-password" minLength={8} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} aria-invalid={confirmPassword.length > 0 && password !== confirmPassword} aria-describedby="password-match-status" placeholder="Re-enter your password" /></label>
           <small id="password-match-status" className={`password-match-status${confirmPassword.length > 0 ? (password === confirmPassword ? " password-matches" : " password-mismatch") : ""}`} aria-live="polite">{confirmPassword.length > 0 ? (password === confirmPassword ? "Passwords match." : "Passwords do not match.") : "Re-enter your password to confirm it."}</small>
-          {type === "farmer" && <><label>Address<input required name="address" minLength={3} maxLength={255} placeholder="Street or village" /></label><div className="name-fields"><label>City / district<input required name="city" minLength={2} maxLength={100} placeholder="e.g. Morogoro" /></label><label>Region<input required name="region" minLength={2} maxLength={100} placeholder="e.g. Morogoro" /></label></div><label>About your farm<textarea name="about" rows={3} maxLength={1000} placeholder="What do you grow or raise?" /></label></>}
+          {type === "farmer" && <><label>Address<input required name="address" minLength={3} maxLength={255} placeholder="Street or village" /></label><div className="name-fields"><label>City / district<input required name="city" minLength={2} maxLength={100} placeholder="e.g. Morogoro" /></label><label>Region<input required name="region" minLength={2} maxLength={100} placeholder="e.g. Morogoro" /></label></div><label>About your farm<textarea name="about" rows={3} maxLength={1000} placeholder="What do you grow or raise?" /></label><label className="check-line"><input type="checkbox" name="smsOrderAlerts" /> <span>I agree to receive SMS alerts about new orders at this phone number. SMS replies can confirm or reject an order.</span></label></>}
           {type === "customer" && <><label>Region<input name="region" placeholder="e.g. Dar es Salaam" /></label><label className="check-line"><input required type="checkbox" name="terms" /> <span>I agree to the FarmLink terms and privacy policy.</span></label></>}
           {error && <p className="form-notice" role="alert">{error}</p>}{notice && <p className="form-notice" role="status">{notice}</p>}
           <button className="button button-green form-submit" type="submit" disabled={loading}>{loading ? "Creating account..." : type === "farmer" ? "Submit farm for review" : "Create customer account"} <span>→</span></button>

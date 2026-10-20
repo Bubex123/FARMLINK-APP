@@ -88,6 +88,16 @@ export class AppController {
     return this.service.createOrder(this.userId(auth), body);
   }
 
+  // Africa's Talking posts inbound SMS as form fields (`from`, `text`). The
+  // per-order code plus matching farmer phone authorizes the status change.
+  @Post('sms/inbound')
+  inboundSms(@Body() value: unknown) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new BadRequestException('Invalid SMS callback.');
+    const body = value as Record<string, unknown>;
+    if (typeof body.from !== 'string' || typeof body.text !== 'string') throw new BadRequestException('SMS callback must include sender and message text.');
+    return this.service.handleFarmerSmsReply(String(body.from || ''), String(body.text || ''));
+  }
+
   @Put('orders/:id/status')
   updateOrder(@Headers('authorization') auth: string | undefined, @Param('id') id: string, @Body() value: unknown) {
     const body = inputBody(value, ['status'], ['status']);
@@ -109,13 +119,21 @@ export class AppController {
 
   @Post('sellers')
   createSeller(@Headers('authorization') auth: string | undefined, @Body() value: unknown) {
-    const body = inputBody(value, ['farmName', 'contactPerson', 'phone', 'email', 'address', 'city', 'region', 'description'], ['farmName', 'address', 'city', 'region']);
+    const body = inputBody(value, ['farmName', 'contactPerson', 'phone', 'email', 'address', 'city', 'region', 'description', 'smsOrderAlerts'], ['farmName', 'address', 'city', 'region']);
+    if (body.smsOrderAlerts !== undefined && typeof body.smsOrderAlerts !== 'boolean') throw new BadRequestException('SMS alert preference must be true or false.');
     return this.service.createSeller(this.userId(auth), body);
   }
 
   @Get('sellers/me')
   mySeller(@Headers('authorization') auth?: string) {
     return this.service.mySeller(this.userId(auth));
+  }
+
+  @Put('sellers/me/sms-alerts')
+  updateMySellerSmsPreference(@Headers('authorization') auth: string | undefined, @Body() value: unknown) {
+    const body = inputBody(value, ['enabled'], ['enabled']);
+    if (typeof body.enabled !== 'boolean') throw new BadRequestException('SMS alert preference must be true or false.');
+    return this.service.updateMySellerSmsPreference(this.userId(auth), body.enabled);
   }
 
   @Put('sellers/:id/verification')
